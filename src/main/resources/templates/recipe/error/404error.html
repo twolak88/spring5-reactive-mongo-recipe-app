@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${httpStatus.value() + ' ' + httpStatus.getReasonPhrase()}">404 Not Found Error</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+	<div class="container-fluid" style="margin-top: 20px">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="row"><h1 th:text="${httpStatus.value() + ' ' + httpStatus.getReasonPhrase()}">404 not Found</h1></div>
+			<div class="row"><p th:text="${exception.message}">exception message</p></div>
+			<div class="row"><p th:text="${T(org.apache.commons.lang3.exception.ExceptionUtils).getStackTrace(exception)}">stack trace</p></div>
+		</div>
+	</div>
+</body>
+</html>

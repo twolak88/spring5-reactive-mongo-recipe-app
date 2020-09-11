@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Recipe form</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+	<div class="container-fluid" style="margin-top: 20px">
+		<div class="col-md-6 col-md-offset-3">
+			<form th:object="${recipe}" th:action="@{/recipe/}" th:method="post">
+				<input type="hidden" th:field="*{id}" />
+				<div class="card border-primary mb-3">
+					<div class="card-header text-white bg-primary">
+						<div class="card-title font-weight-bold bg-primary text-white">
+							<p class="card-text mb-4" th:text="'Edit Recipe Information'">Edit
+								Recipe Information</p>
+						</div>
+					</div>
+					<div class="card-body pb-0">
+						<div class="row alert alert-danger"
+							th:if="${#fields.hasErrors('*')}">
+							<p>Please correct errors below.</p>
+						</div>
+						<div class="row">
+							<div class="col-md-12 form-group">
+								<label th:text="#{recipe.description}">Recipe Description:</label> <input type="text"
+									class="form-control"
+									th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
+									th:field="*{description}"/> <span
+									class="invalid-feedback"
+									th:if="${#fields.hasErrors('description')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('description')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3 form-group">
+								<label>Categories:</label>
+							</div>
+							<div class="col-md-9 form-group">
+								<div class="radio">
+									<label> <input type="checkbox" value="" /> Cat 1
+									</label>
+								</div>
+								<div class="radio" th:remove="all">
+									<label> <input type="checkbox" value="" /> Cat 2
+									</label>
+								</div>
+								<div th:each="category, idx : ${recipe.categories}">
+									<input type="hidden" th:field="*{categories[__${idx.index}__].id}">								
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-3 form-group">
+								<label>Prep Time:</label> <input type="text"
+									class="form-control"
+									th:classappend="${#fields.hasErrors('prepTime')} ? 'is-invalid' : ''"
+									th:field="*{prepTime}" /> <span class="invalid-feedback"
+									th:if="${#fields.hasErrors('prepTime')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('prepTime')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+							<div class="col-md-3 form-group">
+								<label>Cooktime:</label> <input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('cookTime')} ? 'is-invalid' : ''"
+									th:field="*{cookTime}" /> <span class="invalid-feedback"
+									th:if="${#fields.hasErrors('cookTime')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('cookTime')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+							<div class="col-md-3 form-group">
+								<label>Difficulty:</label> <select class="form-control"
+									th:field="*{difficulty}">
+									<option
+										th:each="difficultyVal : ${T(com.twolak.springframework.domain.Difficulty).values()}"
+										th:value="${difficultyVal.name()}"
+										th:text="${difficultyVal.name()}">val</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-3 form-group">
+								<label>Servings:</label> <input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('servings')} ? 'is-invalid' : ''"
+									th:field="*{servings}" /><span class="invalid-feedback"
+									th:if="${#fields.hasErrors('servings')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('servings')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+							<div class="col-md-3 form-group">
+								<label>Source:</label> <input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('source')} ? 'is-invalid' : ''"
+									th:field="*{source}" /> <span class="invalid-feedback"
+									th:if="${#fields.hasErrors('source')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('source')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+							<div class="col-md-3 form-group">
+								<label>URL:</label> <input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('url')} ? 'is-invalid' : ''"
+									th:field="*{url}" /> <span class="invalid-feedback"
+									th:if="${#fields.hasErrors('url')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('url')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="card border-primary mb-3">
+					<div class="card-header text-white bg-primary">
+						<div class="card-title font-weight-bold bg-primary text-white">
+							<div class="row">
+								<div class="col-md-10">
+									<p class="card-text mb-4" th:text="'Ingredients'">Ingredients</p>
+								</div>
+								<div class="col-md-1">
+									<a class="btn btn-light" href="#"
+										th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}"
+										role="button">View</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body pb-0">
+						<div class="row">
+							<div class="col-md-12">
+								<ul th:if="${not #lists.isEmpty(recipe.ingredients)}">
+									<li th:remove="all">1 Cup of milk</li>
+									<li th:remove="all">1 Teaspoon of chocolate</li>
+									<li th:each="ingredient : ${recipe.ingredients}"
+										th:text="${(ingredient.getAmount() +
+                                        ' ' + ingredient.unitOfMeasure.getDescription() +
+                                        ' - ' + ingredient.getDescription())}">1
+										Teaspoon of Sugar</li>
+								</ul>
+								<div th:each="ingredient,idx:${recipe.ingredients}">
+									<input type="hidden" th:field="*{ingredients[__${idx.index}__].id}">
+									<input type="hidden" th:field="*{ingredients[__${idx.index}__].description}">
+									<input type="hidden" th:field="*{ingredients[__${idx.index}__].amount}">
+									<input type="hidden" th:field="*{ingredients[__${idx.index}__].unitOfMeasure.id}">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card border-primary mb-3">
+					<div class="card-header text-white bg-primary">
+						<div class="card-title font-weight-bold bg-primary text-white">
+							<p class="card-text mb-4" th:text="'Directions'">Directions</p>
+						</div>
+					</div>
+					<div class="card-body pb-0">
+						<div class="row">
+							<div class="col-md-12 form-group">
+								<textarea class="form-control"
+									th:classappend="${#fields.hasErrors('directions')} ? 'is-invalid' : ''"
+									rows="3" th:field="*{directions}"></textarea>
+								<span class="invalid-feedback"
+									th:if="${#fields.hasErrors('directions')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('directions')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card border-primary mb-3">
+					<div class="card-header text-white bg-primary">
+						<div class="card-title font-weight-bold bg-primary text-white">
+							<p class="card-text mb-4" th:text="'Notes'">Notes</p>
+						</div>
+					</div>
+					<div class="card-body pb-0">
+						<div class="row">
+							<div class="col-md-12 form-group">
+								<textarea class="form-control"
+									th:classappend="${#fields.hasErrors('notes.note')} ? 'is-invalid' : ''"
+									rows="3" th:field="*{notes.note}"></textarea>
+								<span class="invalid-feedback"
+									th:if="${#fields.hasErrors('notes.note')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('notes.note')}"
+											th:text="${err}" />
+									</ul>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

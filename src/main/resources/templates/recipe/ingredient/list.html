@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Recipes</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+	<div class="container-fluid" style="margin-top: 20px">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="card border-primary mb-3">
+				<div class="card-header font-weight-bold text-white bg-primary">
+					<div class="row">
+						<p class="card-title mb-4 col-md-11">Ingredients</p>
+						<a class="btn btn-light col-md-1" href="#"
+							th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/new'}"
+							role="button">Add</a>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive"
+						th:if="${not #lists.isEmpty(recipe.ingredients)}">
+						<table class="table table-hover">
+							<thead class="thead-inverse">
+								<tr>
+									<td>ID</td>
+									<td>Description</td>
+									<td>View</td>
+									<td>Update</td>
+									<td>Delete</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="ingredient : ${recipe.ingredients}">
+									<td style="width: 100px;" th:text="${ingredient.id}"></td>
+									<td style="width: 300px;"
+										th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.description} + ' - ' + ${ingredient.description}"></td>
+									<td style="width: 100px;"><a href="#"
+										th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show'}">View</a></td>
+									<td style="width: 100px;"><a href="#"
+										th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update'}">Update</a></td>
+									<td style="width: 100px;"><a href="#"
+										th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete'}">Delete</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
