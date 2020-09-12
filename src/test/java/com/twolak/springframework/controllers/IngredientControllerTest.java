@@ -15,8 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.HashSet;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +31,8 @@ import com.twolak.springframework.exceptions.NotFoundException;
 import com.twolak.springframework.services.IngredientService;
 import com.twolak.springframework.services.RecipeService;
 import com.twolak.springframework.services.UnitOfMeasureService;
+
+import reactor.core.publisher.Flux;
 
 /**
  * @author twolak
@@ -109,7 +109,7 @@ class IngredientControllerTest {
 		recipeCommand.setId(ING_ID);
 		
 		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
-		when(this.unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
+		when(this.unitOfMeasureService.findAll()).thenReturn(Flux.just());
 		
 		mockMvc.perform(get("/recipe/1/ingredient/new"))
 		.andExpect(status().isOk())

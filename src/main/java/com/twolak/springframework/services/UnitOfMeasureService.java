@@ -1,13 +1,13 @@
 package com.twolak.springframework.services;
 
-import java.util.Set;
-
 import com.twolak.springframework.commands.UnitOfMeasureCommand;
+
+import reactor.core.publisher.Flux;
 
 /**
  * @author twolak
  *
  */
 public interface UnitOfMeasureService {
-	Set<UnitOfMeasureCommand> findAll();
+	Flux<UnitOfMeasureCommand> findAll();
 }
