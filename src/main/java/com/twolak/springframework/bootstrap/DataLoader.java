@@ -1,9 +1,7 @@
 package com.twolak.springframework.bootstrap;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +19,6 @@ import com.twolak.springframework.domain.UnitOfMeasure;
 import com.twolak.springframework.repositories.CategoryRepository;
 import com.twolak.springframework.repositories.RecipeRepository;
 import com.twolak.springframework.repositories.UnitOfMeasureRepository;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,12 +43,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		log.debug("Loading bootstrap data");
-		if (this.categoryRepository.count() == 0) {
-			loadCategories();
-		}
-		if (this.unitOfMeasureRepository.count() == 0) {
-			LoadUnitOfMeasures();
-		}
+		loadCategories();
+		LoadUnitOfMeasures();
 		Set<Recipe> recipes = getRecipes();
 		recipeRepository.saveAll(recipes);
 		syncRecipeCategories(recipes);
@@ -271,6 +264,9 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 	}
 	
 	private void saveCategory(String category) {
+		if (this.categoryRepository.findByDescription(category).isPresent()) {
+			return;
+		}
 		Category cat = new Category();
 		cat.setDescription(category);
 		this.categoryRepository.save(cat);
@@ -289,6 +285,9 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 	}
 	
 	private void saveUnitOfMeasure(String description) {
+		if (this.unitOfMeasureRepository.findByDescription(description).isPresent()) {
+			return;
+		}
 		UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
 		unitOfMeasure.setDescription(description);
 		this.unitOfMeasureRepository.save(unitOfMeasure);

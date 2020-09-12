@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,6 @@ import com.twolak.springframework.services.RecipeService;
  * @author twolak
  *
  */
-@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RecipeServiceImplIT {
@@ -40,7 +41,6 @@ public class RecipeServiceImplIT {
 	@Autowired
 	private RecipeToRecipeCommand recipeToRecipeCommand; 
 	
-	@Transactional
 	@Test
 	public void testSaveRecipes() throws Exception {
 		Iterable<Recipe> recipes = this.recipeRepository.findAll();
