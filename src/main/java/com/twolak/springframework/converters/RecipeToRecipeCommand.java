@@ -3,13 +3,11 @@
  */
 package com.twolak.springframework.converters;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import com.twolak.springframework.commands.IngredientCommand;
 import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.domain.Recipe;
 
@@ -53,7 +51,12 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 		recipeCommand.setImage(source.getImage());
 		recipeCommand.setNotes(this.notesToNotesCommand.convert(source.getNotes()));
 		if (source.getIngredients() != null && source.getIngredients().size() > 0){
-			source.getIngredients().forEach(ingredient -> recipeCommand.getIngredients().add(ingredientToIngredientCommand.convert(ingredient)));
+			source.getIngredients().forEach(ingredient -> {
+				IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
+				ingredientCommand.setRecipeId(source.getId());
+				recipeCommand.getIngredients().add(ingredientCommand);
+				
+			});
 		}
 		if (source.getCategories() != null && source.getCategories().size() > 0){
 			source.getCategories().forEach(category -> recipeCommand.getCategories().add(categoryToCategoryCommand.convert(category)));

@@ -3,6 +3,7 @@
  */
 package com.twolak.springframework.converters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,9 @@ public class CategoryCommandToCategory implements Converter<CategoryCommand, Cat
 			return null;
 		}
 		final Category category = new Category();
-		category.setId(source.getId());
+		if (StringUtils.isNotBlank(source.getId())) {
+			category.setId(source.getId());
+		}
 		category.setDescription(source.getDescription());
 		return category;
 	}

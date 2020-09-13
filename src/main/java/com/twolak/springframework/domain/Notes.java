@@ -5,7 +5,6 @@ package com.twolak.springframework.domain;
 
 import org.springframework.data.annotation.Id;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 

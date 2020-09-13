@@ -3,6 +3,7 @@
  */
 package com.twolak.springframework.converters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
 			return null;
 		}
 		final Ingredient ingredient = new Ingredient();
-		if (source.getId() != null) {
+		if (StringUtils.isNotBlank(source.getId())) {
 			ingredient.setId(source.getId());
 		}
 		if(source.getRecipeId() != null) {

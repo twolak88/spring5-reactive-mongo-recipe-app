@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.twolak.springframework.bootstrap.DataLoader;
@@ -17,6 +18,7 @@ import com.twolak.springframework.domain.UnitOfMeasure;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
+@DirtiesContext
 public class UnitOfMeasureRepositoryIT {
 	
 	@Autowired
@@ -37,19 +39,12 @@ public class UnitOfMeasureRepositoryIT {
 	
 	@AfterEach
 	private void clean() {
-		if (unitOfMeasureRepository.count() > 0) {
-			unitOfMeasureRepository.deleteAll();
-		}
-		if (categoryRepository.count() > 0) {
-			categoryRepository.deleteAll();
-		}
-		if (recipeRepository.count() > 0) {
-			recipeRepository.deleteAll();
-		}
+		unitOfMeasureRepository.deleteAll();
+		categoryRepository.deleteAll();
+		recipeRepository.deleteAll();
 	}
 	
 	@Test
-//	@DirtiesContext
 	public void testFindByDescription() throws Exception {
 		
 		Optional<UnitOfMeasure> uomOptional = unitOfMeasureRepository.findByDescription("Teaspoon");

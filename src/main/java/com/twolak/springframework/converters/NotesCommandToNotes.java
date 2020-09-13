@@ -3,6 +3,7 @@
  */
 package com.twolak.springframework.converters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,9 @@ public class NotesCommandToNotes implements Converter<NotesCommand, Notes> {
 			return null;
 		}
 		final Notes notes = new Notes();
-		notes.setId(source.getId());
+		if (StringUtils.isNotBlank(source.getId())) {
+			notes.setId(source.getId());
+		}
 		notes.setNote(source.getNote());
 		return notes;
 	}

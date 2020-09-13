@@ -13,8 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,13 +20,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.twolak.springframework.commands.IngredientCommand;
+import com.twolak.springframework.commands.UnitOfMeasureCommand;
 import com.twolak.springframework.converters.IngredientCommandToIngredient;
 import com.twolak.springframework.converters.IngredientToIngredientCommand;
 import com.twolak.springframework.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import com.twolak.springframework.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.twolak.springframework.domain.Ingredient;
 import com.twolak.springframework.domain.Recipe;
-import com.twolak.springframework.repositories.RecipeRepository;
+import com.twolak.springframework.domain.UnitOfMeasure;
 import com.twolak.springframework.repositories.reactive.RecipeReactiveRepository;
 import com.twolak.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 
@@ -42,14 +41,12 @@ import reactor.core.publisher.Mono;
 class IngredientServiceImplTest {
 	private static String RECIPE_ID = "r1";
 	private static String ING_ID = "i1";
+	private static String UOM_ID = "u1";
 
 	private IngredientServiceImpl ingredientServiceImpl;
 
 	@Mock
 	private RecipeReactiveRepository recipeReactiveRepository;
-
-	@Mock
-	private RecipeRepository recipeRepository;
 	
 	@Mock
     private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
@@ -58,7 +55,7 @@ class IngredientServiceImplTest {
 	void setUp() throws Exception {
 		this.ingredientServiceImpl = new IngredientServiceImpl(this.recipeReactiveRepository, this.unitOfMeasureReactiveRepository,
 				new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand()),
-				new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()), this.recipeRepository);
+				new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()));
 	}
 
 	@Test()
@@ -114,22 +111,26 @@ class IngredientServiceImplTest {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 		ingredientCommand.setId(ING_ID);
 		ingredientCommand.setRecipeId(RECIPE_ID);
-
-		Optional<Recipe> optionalRecipe = Optional.of(new Recipe());
+		
+		UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+		unitOfMeasureCommand.setId(UOM_ID);
+		ingredientCommand.setUnitOfMeasure(unitOfMeasureCommand);
 
 		Recipe savedRecipe = new Recipe();
 		savedRecipe.addIngredient(new Ingredient());
 		savedRecipe.getIngredients().iterator().next().setId(ING_ID);
 
-		when(this.recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
+		when(this.recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(new Recipe()));
 		when(this.recipeReactiveRepository.save(any())).thenReturn(Mono.just(savedRecipe));
+		when(this.unitOfMeasureReactiveRepository.findById(anyString())).thenReturn(Mono.just(new UnitOfMeasure()));
 
 		IngredientCommand savedIngredientCommand = this.ingredientServiceImpl.save(ingredientCommand).block();
 
 		assertEquals(ING_ID, savedIngredientCommand.getId());
-		verify(this.recipeRepository, times(1)).findById(anyString());
+		verify(this.recipeReactiveRepository, times(1)).findById(anyString());
 		verify(this.recipeReactiveRepository, times(1)).save(any());
 		verifyNoMoreInteractions(this.recipeReactiveRepository);
+		verify(this.unitOfMeasureReactiveRepository, times(1)).findById(anyString());
 	}
 	
 	@Test
@@ -140,12 +141,13 @@ class IngredientServiceImplTest {
 		ingredient.setId(ING_ID);
 		recipe.addIngredient(ingredient);
 		
-		when(this.recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
+		when(this.recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
+		when(this.recipeReactiveRepository.save(any())).thenReturn(Mono.just(recipe));
 		
 		this.ingredientServiceImpl.deleteById(RECIPE_ID, ING_ID);
 		
-		verify(this.recipeRepository, times(1)).findById(anyString());
-		verify(this.recipeRepository, times(1)).save(any(Recipe.class));
+		verify(this.recipeReactiveRepository, times(1)).findById(anyString());
+		verify(this.recipeReactiveRepository, times(1)).save(any(Recipe.class));
 		verifyNoMoreInteractions(this.recipeReactiveRepository);
 	}
 }

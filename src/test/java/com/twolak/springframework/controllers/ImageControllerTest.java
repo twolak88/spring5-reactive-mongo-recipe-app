@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.services.ImageService;
 import com.twolak.springframework.services.RecipeService;
+
+import reactor.core.publisher.Mono;
 
 /**
  * @author twolak
@@ -63,7 +64,7 @@ class ImageControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(ID);
 		
-		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(this.recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 		
 		this.mockMvc.perform(get("/recipe/1/image"))
 			.andExpect(status().isOk())
@@ -100,7 +101,7 @@ class ImageControllerTest {
 		
 		recipeCommand.setImage(bytesBoxed);
 		
-		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(this.recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 		
 		MockHttpServletResponse mockHttpServletResponse = this.mockMvc.perform(get("/recipe/1/recipeimage"))
 				.andExpect(status().isOk()).andReturn().getResponse();

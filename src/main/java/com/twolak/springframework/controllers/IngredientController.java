@@ -42,7 +42,7 @@ public class IngredientController {
 	@GetMapping("/ingredients")
 	public String listIngredients(@PathVariable String recipeId, Model model) {
 		log.debug("Getting ingredients for recipe: " + recipeId);
-		model.addAttribute("recipe", this.recipeService.findById(recipeId));
+		model.addAttribute("recipe", this.recipeService.findById(recipeId).block());
 		return "recipe/ingredient/list";
 	}
 	
@@ -55,7 +55,7 @@ public class IngredientController {
 	
 	@GetMapping("/ingredient/new")
 	public String newIngredient(@PathVariable String recipeId, Model model) {
-		RecipeCommand recipeCommand = this.recipeService.findById(recipeId);
+		RecipeCommand recipeCommand = this.recipeService.findById(recipeId).block();
 		if (recipeCommand == null) {
 			throw new RuntimeException("Recipe doesn't exists!");
 		}

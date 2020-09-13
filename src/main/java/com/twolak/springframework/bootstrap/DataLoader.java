@@ -19,13 +19,12 @@ import com.twolak.springframework.domain.UnitOfMeasure;
 import com.twolak.springframework.repositories.CategoryRepository;
 import com.twolak.springframework.repositories.RecipeRepository;
 import com.twolak.springframework.repositories.UnitOfMeasureRepository;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author twolak
  *
  */
-@Slf4j
+//@Slf4j
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -42,7 +41,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		log.debug("Loading bootstrap data");
+//		log.debug("Loading bootstrap data");
 		loadCategories();
 		LoadUnitOfMeasures();
 		Set<Recipe> recipes = getRecipes();
@@ -53,7 +52,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 	private void syncRecipeCategories(Set<Recipe> recipes) {
 		Set<Category> categories = new HashSet<>();
 		recipes.forEach(recipe -> recipe.getCategories().forEach(category -> {
-			category.getRecipes().add(recipe);
+//			category.getRecipes().add(recipe);
 			categories.add(category);
 			}));
 		this.categoryRepository.saveAll(categories);
@@ -181,7 +180,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 		guacamole.getCategories().add(american);
 		recipes.add(guacamole);
 		
-		log.info("guacamole created");
+//		log.info("guacamole created");
 		
 		Recipe chicken = createRecipe("Spicy Grilled Chicken Tacos Recipe", 
 				20,
@@ -230,7 +229,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 		chicken.getCategories().add(fastFood);
 		recipes.add(chicken);
 		
-		log.info("chicken created");
+//		log.info("chicken created");
 		
 		return recipes;
 	}

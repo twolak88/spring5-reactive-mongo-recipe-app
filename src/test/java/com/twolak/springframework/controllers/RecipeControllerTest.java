@@ -30,6 +30,8 @@ import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.exceptions.NotFoundException;
 import com.twolak.springframework.services.RecipeService;
 
+import reactor.core.publisher.Mono;
+
 /**
  * @author twolak
  *
@@ -62,9 +64,9 @@ class RecipeControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(ID);
 
-		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(this.recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 
-		this.mockMvc.perform(get("/recipe/1/show"))
+		this.mockMvc.perform(get("/recipe/a1/show"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("recipe/show"))
 				.andExpect(model().attributeExists("recipe"))
@@ -109,7 +111,7 @@ class RecipeControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(ID);
 
-		when(this.recipeService.save(any())).thenReturn(recipeCommand);
+		when(this.recipeService.save(any())).thenReturn(Mono.just(recipeCommand));
 
 		this.mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("recipeId", "")
@@ -140,7 +142,7 @@ class RecipeControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(ID);
 
-		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(this.recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 
 		this.mockMvc.perform(get("/recipe/" + ID + "/update"))
 				.andExpect(status().isOk())
@@ -155,6 +157,8 @@ class RecipeControllerTest {
 	
 	@Test
 	public void testDeleteRecipe() throws Exception {
+		when(this.recipeService.deleteById(anyString())).thenReturn(Mono.empty());
+		
 		mockMvc.perform(get("/recipe/1/delete"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/"));

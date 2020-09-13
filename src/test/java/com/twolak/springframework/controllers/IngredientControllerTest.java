@@ -1,4 +1,4 @@
-/**
+ /**
  * 
  */
 package com.twolak.springframework.controllers;
@@ -70,7 +70,7 @@ class IngredientControllerTest {
 	@Test
 	public void testListIngredients() throws Exception {
 		RecipeCommand recipeCommand = new RecipeCommand();
-		when(recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 
 		this.mockMvc.perform(get("/recipe/1/ingredients")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/list")).andExpect(model().attributeExists("recipe"));
@@ -110,7 +110,7 @@ class IngredientControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(ING_ID);
 		
-		when(this.recipeService.findById(anyString())).thenReturn(recipeCommand);
+		when(this.recipeService.findById(anyString())).thenReturn(Mono.just(recipeCommand));
 		when(this.unitOfMeasureService.findAll()).thenReturn(Flux.just());
 		
 		mockMvc.perform(get("/recipe/1/ingredient/new"))

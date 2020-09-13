@@ -3,6 +3,7 @@
  */
 package com.twolak.springframework.converters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,9 @@ public class UnitOfMeasureCommandToUnitOfMeasure
 			return null;
 		}
 		final UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
-		unitOfMeasure.setId(source.getId());
+		if (StringUtils.isNotBlank(source.getId())) {
+			unitOfMeasure.setId(source.getId());
+		}
 		unitOfMeasure.setDescription(source.getDescription());
 		return unitOfMeasure;
 	}

@@ -10,10 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,6 +26,8 @@ import org.springframework.ui.Model;
 
 import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.services.RecipeService;
+
+import reactor.core.publisher.Flux;
 
 /**
  * @author twolak
@@ -54,6 +56,8 @@ public class IndexControllerTest {
 	public void testMVCGetIndexPage() throws Exception {
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
 		
+		when(recipeService.findAll()).thenReturn(Flux.just(new RecipeCommand()));
+		
 		mockMvc.perform(get("/index/"))
 			.andExpect(status().isOk())
 			.andExpect(status().is2xxSuccessful())
@@ -67,7 +71,6 @@ public class IndexControllerTest {
 	}
 	
 	@Test
-	@Disabled
 	public void testGetIndexPage() throws Exception {
 		
 		//given
@@ -78,9 +81,9 @@ public class IndexControllerTest {
 			recipes.add(recipe);
 		}
 		
-		when(recipeService.findAll()).thenReturn(recipes);
+		when(recipeService.findAll()).thenReturn(Flux.fromIterable(recipes));
 		
-		ArgumentCaptor<Set<RecipeCommand>> argumentCaptor = ArgumentCaptor.forClass(Set.class); 
+		ArgumentCaptor<List<RecipeCommand>> argumentCaptor = ArgumentCaptor.forClass(List.class); 
 		
 		//when
 		String viewName = indexController.getIndexPage(model);
@@ -90,7 +93,7 @@ public class IndexControllerTest {
 		verify(model, times(METHODS_CALL_TIMES)).addAttribute(eq("recipes"), argumentCaptor.capture());
 		verify(recipeService, times(METHODS_CALL_TIMES)).findAll();
 		
-		Set<RecipeCommand> setInController = argumentCaptor.getValue();
+		List<RecipeCommand> setInController = argumentCaptor.getValue();
 		assertEquals(RECIPES_IN_SET, setInController.size());
 	}
 }

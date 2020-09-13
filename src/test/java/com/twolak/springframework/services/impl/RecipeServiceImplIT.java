@@ -6,15 +6,11 @@ package com.twolak.springframework.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.converters.RecipeToRecipeCommand;
@@ -41,6 +37,21 @@ public class RecipeServiceImplIT {
 	@Autowired
 	private RecipeToRecipeCommand recipeToRecipeCommand; 
 	
+//	@BeforeEach
+//	public void setUp() throws Exception {
+//		DataLoader dataLoader = new DataLoader(unitOfMeasureRepository, categoryRepository, recipeRepository);
+//		
+//		dataLoader.onApplicationEvent(null);
+//	}
+//	
+//	@AfterEach
+//	private void clean() {
+//		unitOfMeasureRepository.deleteAll();
+//		categoryRepository.deleteAll();
+//		recipeRepository.deleteAll();
+//	}
+	
+	
 	@Test
 	public void testSaveRecipes() throws Exception {
 		Iterable<Recipe> recipes = this.recipeRepository.findAll();
@@ -48,7 +59,7 @@ public class RecipeServiceImplIT {
 		RecipeCommand testRecipeCommand = this.recipeToRecipeCommand.convert(testRecipe);
 		
 		testRecipeCommand.setDescription(DESRIPTION);
-		RecipeCommand savedRecipeCommand = this.recipeService.save(testRecipeCommand);
+		RecipeCommand savedRecipeCommand = this.recipeService.save(testRecipeCommand).block();
 		
 		assertNotNull(savedRecipeCommand);
 		assertEquals(DESRIPTION, savedRecipeCommand.getDescription());
