@@ -4,11 +4,11 @@
 package com.twolak.springframework.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.twolak.springframework.domain.Recipe;
-import com.twolak.springframework.repositories.RecipeRepository;
+import com.twolak.springframework.repositories.reactive.RecipeReactiveRepository;
 import com.twolak.springframework.services.RecipeService;
+
+import reactor.core.publisher.Mono;
 
 /**
  * @author twolak
@@ -35,7 +37,7 @@ class ImageServiceImplTest {
 	private ImageServiceImpl imageServiceImpl;
 
 	@Mock
-	private RecipeRepository recipeRepository;
+	private RecipeReactiveRepository recipeReactiveRepository;
 
 	@Mock
 	private RecipeService recipeService;
@@ -52,12 +54,14 @@ class ImageServiceImplTest {
 		Recipe recipe = new Recipe();
 		recipe.setId(id);
 
-		when(this.recipeRepository.findById(id)).thenReturn(Optional.of(recipe));
+		when(this.recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
+		when(this.recipeReactiveRepository.save(any(Recipe.class))).thenReturn(Mono.just(recipe));
+		
 		ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 		
 		imageServiceImpl.saveImageFile(id, multipartFile);
 		
-		verify(this.recipeRepository, times(1)).save(argumentCaptor.capture());
+		verify(this.recipeReactiveRepository, times(1)).save(argumentCaptor.capture());
 		Recipe savedRecipe = argumentCaptor.getValue();
 		assertEquals(multipartFile.getBytes().length, savedRecipe.getImage().length);
 	}
