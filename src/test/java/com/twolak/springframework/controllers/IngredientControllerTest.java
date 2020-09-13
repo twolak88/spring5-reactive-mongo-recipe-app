@@ -27,12 +27,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.twolak.springframework.commands.IngredientCommand;
 import com.twolak.springframework.commands.RecipeCommand;
+import com.twolak.springframework.commands.UnitOfMeasureCommand;
 import com.twolak.springframework.exceptions.NotFoundException;
 import com.twolak.springframework.services.IngredientService;
 import com.twolak.springframework.services.RecipeService;
 import com.twolak.springframework.services.UnitOfMeasureService;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author twolak
@@ -79,7 +81,7 @@ class IngredientControllerTest {
 	public void testShowIngredient() throws Exception {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 
-		when(this.ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+		when(this.ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(ingredientCommand));
 
 		this.mockMvc.perform(get("/recipe/1/ingredient/2/show")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/show")).andExpect(model().attributeExists("ingredient"));
@@ -126,7 +128,8 @@ class IngredientControllerTest {
 	public void testUpdateIngredientForm() throws Exception {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 
-		when(this.ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+		when(this.ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(ingredientCommand));
+		when(this.unitOfMeasureService.findAll()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		this.mockMvc.perform(get("/recipe/1/ingredient/2/update")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/ingredientform"))
@@ -144,7 +147,7 @@ class IngredientControllerTest {
 		ingredientCommand.setId(ING_ID);
 		ingredientCommand.setRecipeId(RECIP_ID);
 		
-		when(this.ingredientService.save(any())).thenReturn(ingredientCommand);
+		when(this.ingredientService.save(any())).thenReturn(Mono.just(ingredientCommand));
 		
 		this.mockMvc.perform(post("/recipe/" + RECIP_ID + "/ingredient")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -158,6 +161,8 @@ class IngredientControllerTest {
 	
 	@Test
 	public void testDeleteIngredient() throws Exception {
+		when(ingredientService.deleteById(anyString(), anyString())).thenReturn(Mono.empty());
+		
 		this.mockMvc.perform(get("/recipe/1/ingredient/1/delete"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/recipe/1/ingredients"));
