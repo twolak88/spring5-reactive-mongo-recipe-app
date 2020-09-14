@@ -1,12 +1,5 @@
 package com.twolak.springframework.controllers;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.twolak.springframework.commands.RecipeCommand;
 import com.twolak.springframework.services.ImageService;
 import com.twolak.springframework.services.RecipeService;
 
@@ -50,22 +42,22 @@ public class ImageController {
 		return "redirect:/recipe/" + recipeId + "/show";
 	}
 	
-	@GetMapping("/recipeimage")
-	public void renderImageFromDB(@PathVariable String recipeId, HttpServletResponse httpServletResponse) throws IOException {
-		RecipeCommand recipeCommand = this.recipeService.findById(recipeId).block();
-		if (recipeCommand.getImage() != null && recipeCommand.getImage().length > 0) {
-			byte[] imageBytes = new byte[recipeCommand.getImage().length];
-			
-			int i = 0;
-			for(Byte wrappedBytes : recipeCommand.getImage()) {
-				imageBytes[i++] = wrappedBytes;
-			}
-			
-			httpServletResponse.setContentType("image/jpg");
-			InputStream inputStream = new ByteArrayInputStream(imageBytes);
-			IOUtils.copy(inputStream, httpServletResponse.getOutputStream());
-		} else {
-			log.error("Image for recipe id: " + recipeId + " desn't exists!");
-		}
-	}
+//	@GetMapping("/recipeimage")
+//	public void renderImageFromDB(@PathVariable String recipeId, HttpServletResponse httpServletResponse) throws IOException {
+//		RecipeCommand recipeCommand = this.recipeService.findById(recipeId).block();
+//		if (recipeCommand.getImage() != null && recipeCommand.getImage().length > 0) {
+//			byte[] imageBytes = new byte[recipeCommand.getImage().length];
+//			
+//			int i = 0;
+//			for(Byte wrappedBytes : recipeCommand.getImage()) {
+//				imageBytes[i++] = wrappedBytes;
+//			}
+//			
+//			httpServletResponse.setContentType("image/jpg");
+//			InputStream inputStream = new ByteArrayInputStream(imageBytes);
+//			IOUtils.copy(inputStream, httpServletResponse.getOutputStream());
+//		} else {
+//			log.error("Image for recipe id: " + recipeId + " desn't exists!");
+//		}
+//	}
 }

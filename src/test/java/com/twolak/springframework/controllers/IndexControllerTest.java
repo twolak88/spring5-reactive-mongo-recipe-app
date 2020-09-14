@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -33,6 +34,7 @@ import reactor.core.publisher.Flux;
  * @author twolak
  *
  */
+@Disabled
 @ExtendWith(MockitoExtension.class)
 public class IndexControllerTest {
 	

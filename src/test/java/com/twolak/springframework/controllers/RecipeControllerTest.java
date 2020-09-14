@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ import reactor.core.publisher.Mono;
  * @author twolak
  *
  */
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class RecipeControllerTest {
 	private final int METHODS_CALL_TIMES = 1;
