@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -29,8 +30,11 @@ public class IngredientCommand {
 	@Size(min = 3, max = 255)
 	private String description;
 	
+	@NotNull
 	@Min(1)
-	@Max(999)
-	private BigDecimal amount;	
+	@Max(99)
+	private BigDecimal amount;
+	
+	@NotNull
 	private UnitOfMeasureCommand unitOfMeasure;
 }

@@ -19,6 +19,7 @@
 		<div class="col-md-6 col-md-offset-3">
 			<form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'}" th:method="post">
 				<input type="hidden" th:field="*{id}" />
+				<input type="hidden" th:field="*{recipeId}"/>
 				<div class="card border-primary mb-3">
 					<div class="card-header text-white bg-primary">
 						<div class="card-title font-weight-bold bg-primary text-white">
@@ -26,10 +27,21 @@
 						</div>
 					</div>
 					<div class="card-body pb-0">
+						<div class="row alert alert-danger"
+							th:if="${#fields.hasErrors('*')}">
+							<p>Please correct errors below.</p>
+						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">
 								<label>Amount:</label>
-								<input type="number" class="form-control" th:field="*{amount}" />
+								<input type="number" class="form-control" th:field="*{amount}" th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''"/>
+								<span class="invalid-feedback"
+									th:if="${#fields.hasErrors('amount')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('amount')}"
+											th:text="${err}" />
+									</ul>
+								</span>
 							</div>
 							<div class="col-md-12 form-group">
 								<label>Unit of Measure:</label>
@@ -42,7 +54,14 @@
 							</div>
 							<div class="col-md-12 form-group">
 								<label>Description:</label>
-								<input type="text" class="form-control" th:field="*{description}" />
+								<input type="text" class="form-control" th:field="*{description}" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"/>
+								<span class="invalid-feedback"
+									th:if="${#fields.hasErrors('description')}">
+									<ul>
+										<li th:each="err : ${#fields.errors('description')}"
+											th:text="${err}" />
+									</ul>
+								</span>
 							</div>
 						</div>
 					</div>
