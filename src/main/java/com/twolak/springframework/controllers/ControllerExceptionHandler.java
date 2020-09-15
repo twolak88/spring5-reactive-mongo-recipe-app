@@ -4,16 +4,14 @@
 package com.twolak.springframework.controllers;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author twolak
  *
  */
-@Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
-	
+
 //	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 //	@ExceptionHandler({NotFoundException.class, TemplateInputException.class, WebExchangeBindException.class})
 //	public String handleNotFound(NotFoundException exception, Model model) {

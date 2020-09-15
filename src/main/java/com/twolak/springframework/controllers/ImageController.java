@@ -12,13 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.twolak.springframework.services.ImageService;
 import com.twolak.springframework.services.RecipeService;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @author twolak
  *
  */
-@Slf4j
 @Controller
 @RequestMapping("/recipe/{recipeId}")
 public class ImageController {
